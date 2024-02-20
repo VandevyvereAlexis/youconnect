@@ -4,37 +4,45 @@ use Illuminate\Support\Str;
 
 return [
 
+
+
     /*
     |--------------------------------------------------------------------------
     | Default Database Connection Name
     |--------------------------------------------------------------------------
     |
-    | Here you may specify which of the database connections below you wish
-    | to use as your default connection for all database work. Of course
-    | you may use many connections at once using the Database library.
+    | Choix de la connexion de base de données par défaut pour toutes les opérations.
+    | Par défaut, 'mysql' est utilisé, mais vous pouvez changer cela ici.
     |
     */
-
     'default' => env('DB_CONNECTION', 'mysql'),
+
+
 
     /*
     |--------------------------------------------------------------------------
     | Database Connections
     |--------------------------------------------------------------------------
     |
-    | Here are each of the database connections setup for your application.
-    | Of course, examples of configuring each database platform that is
-    | supported by Laravel is shown below to make development simple.
+    | Configurations des différentes connexions de base de données.
+    | Laravel prend en charge plusieurs connexions simultanées.
     |
-    |
-    | All database work in Laravel is done through the PHP PDO facilities
-    | so make sure you have the driver for your particular database of
-    | choice installed on your machine before you begin development.
+    | Toutes les opérations de base de données dans Laravel sont effectuées via PDO en PHP,
+    | assurez-vous donc d'avoir le pilote pour votre base de données spécifique installé.
     |
     */
-
     'connections' => [
 
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SQLite Database
+        |--------------------------------------------------------------------------
+        |
+        | Configuration spécifique à la base de données SQLite.
+        |
+        */
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
@@ -43,6 +51,17 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | MySQL Database
+        |--------------------------------------------------------------------------
+        |
+        | Configuration spécifique à la base de données MySQL.
+        | Utilisation du moteur de stockage InnoDB par défaut.
+        |
+        */
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
@@ -57,13 +76,23 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
-            'engine' => null,
+            'engine' => "InnoDB",
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 
+
+
         'pgsql' => [
+            /*
+            |--------------------------------------------------------------------------
+            | PostgreSQL Database
+            |--------------------------------------------------------------------------
+            |
+            | Configuration spécifique à la base de données PostgreSQL.
+            |
+            */
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -78,7 +107,17 @@ return [
             'sslmode' => 'prefer',
         ],
 
+
+
         'sqlsrv' => [
+            /*
+            |--------------------------------------------------------------------------
+            | SQL Server Database
+            |--------------------------------------------------------------------------
+            |
+            | Configuration spécifique à la base de données SQL Server.
+            |
+            */
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', 'localhost'),
@@ -95,30 +134,30 @@ return [
 
     ],
 
+
+
     /*
     |--------------------------------------------------------------------------
     | Migration Repository Table
     |--------------------------------------------------------------------------
     |
-    | This table keeps track of all the migrations that have already run for
-    | your application. Using this information, we can determine which of
-    | the migrations on disk haven't actually been run in the database.
+    | Table utilisée pour stocker les informations sur les migrations.
+    | Cela aide à déterminer quelles migrations ont déjà été exécutées dans la base de données.
     |
     */
-
     'migrations' => 'migrations',
+
+
 
     /*
     |--------------------------------------------------------------------------
     | Redis Databases
     |--------------------------------------------------------------------------
     |
-    | Redis is an open source, fast, and advanced key-value store that also
-    | provides a richer body of commands than a typical key-value system
-    | such as APC or Memcached. Laravel makes it easy to dig right in.
+    | Configurations pour les bases de données Redis.
+    | Laravel facilite l'utilisation de Redis pour diverses tâches.
     |
     */
-
     'redis' => [
 
         'client' => env('REDIS_CLIENT', 'phpredis'),
