@@ -24,10 +24,22 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            // Générer un pseudo en combinant un nom et un prénom fictifs
+            'pseudo' => fake()->name() . fake()->firstName(),
+
+            // Utiliser une image par défaut pour chaque utilisateur
+            'image' => 'user.jpg',
+
+            // Générer une adresse email unique et sûre
             'email' => fake()->unique()->safeEmail(),
+
+            // Définir la date actuelle comme date de vérification de l'email
             'email_verified_at' => now(),
+
+            // Utiliser le mot de passe actuel ou générer un nouveau mot de passe haché
             'password' => static::$password ??= Hash::make('password'),
+
+            // Générer un jeton de rappel aléatoire
             'remember_token' => Str::random(10),
         ];
     }
@@ -38,6 +50,7 @@ class UserFactory extends Factory
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
+            // Ajouter une méthode pour définir l'email comme non vérifié
             'email_verified_at' => null,
         ]);
     }
