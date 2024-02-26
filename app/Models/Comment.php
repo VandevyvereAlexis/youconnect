@@ -24,4 +24,8 @@ class Comment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected $fillable = [
+        'content', 'image', 'tags', 'user_id', 'post_id'
+    ];
 }
