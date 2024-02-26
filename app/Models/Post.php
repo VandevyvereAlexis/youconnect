@@ -27,4 +27,8 @@ class Post extends Model
         // Définit la relation "hasMany" avec le modèle Comment
         return $this->hasMany(Comment::class);
     }
+
+    protected $fillable = [
+        'content', 'image', 'tags', 'user_id'
+    ];
 }
