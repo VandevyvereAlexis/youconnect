@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\updateCommentRequest;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +24,7 @@ class CommentController extends Controller
 
         return response()->json([
             'status' => true, 
-            'message' => 'commentaires récupérés avec succès ',
+            'message' => 'commentaire récupérés avec succès ',
             'comments' => $comments,
         ]);
     }
@@ -33,31 +36,10 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCommentRequest $request)
     {
-        $validator = Validator::make(
-            $request->all(), 
-            [
-                'content'  => 'required|string|min:5|max:255',
-                'tags'     => 'required|string|max:255',
-                'image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ],
-        );
-
-        if ($validator->fails()) 
-        {
-            return response()->json($validator->error(), 400);
-        };
-
-        $comment = Comment::create(
-            [
-                'content'   => $request->content,
-                'tags'      => $request->tags,
-                'image'     => $request->image,
-                'post_id'   => $request->post_id,
-                'user_id'   => $request->user_id,
-            ]
-        );
+        $comment = Comment::create($request->all());
+        $comment->update(['image' => isset($request['image']) ? uploadImage($request['image']) : 'user.png',]);
 
         return response()->json(
             [
@@ -91,31 +73,9 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        $validator = Validator::make(
-            $request->all(), 
-            [
-                'content'  => 'required|string|min:5|max:255',
-                'tags'     => 'required|string|max:255',
-                'image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ],
-        );
-
-        if ($validator->fails()) 
-        {
-            return response()->json($validator->error(), 400);
-        };
-
-        $comment->update(
-            [
-                'content'   => $request->content,
-                'tags'      => $request->tags,
-                'image'     => $request->image,
-                'post_id'   => $request->post_id,
-                'user_id'   => $request->user_id,
-            ]
-        );
+        $comment->update($request->all());
 
         return response()->jon(
             [

@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
-
 
 
 
@@ -24,7 +25,7 @@ class UserController extends Controller
 
         return response()->json([
             'status'  => true, 
-            'message' => 'Utilisateur récupérés avec succès ',
+            'message' => 'Utilisateurs récupérés avec succès ',
             'users'   => $users,
         ]);
     }
@@ -36,37 +37,13 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $validator = Validator::make(
-            $request->all(), 
-            [
-                'pseudo'   => 'required|string|alpha_dash|min:3|max:20|unique:users',
-                'email'    => 'required|email|unique:users|max:255',
-                'image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'password' => 
-                [
-                    'required',         
-                    'confirmed',        
-                    Password::min(8)    
-                        ->mixedCase()   
-                        ->letters()     
-                        ->numbers()     
-                        ->symbols()     
-                ],
-            ],
-        );
-
-        if ($validator->fails()) 
-        {
-            return response()->json($validator->error(), 400);
-        };
-
         $user = User::create(
             [
                 'pseudo'   => $request->pseudo,
                 'email'    => $request->email,
-                'image'    => $request->image,
+                'image'    => isset($request['image']) ? uploadImage($request['image']) : 'user.png',
                 'password' => Hash::make($request->password),
             ]
         );
@@ -74,8 +51,8 @@ class UserController extends Controller
         return response()->json(
             [
                 'status'   => true, 
-                'message'  => 'Utilisateur récupérés avec succès ',
-                'users'    => $user,
+                'message'  => 'Utilisateur créé avec succès ',
+                'user'    => $user,
             ], 201 
         );
     }
@@ -105,30 +82,6 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $validator = Validator::make(
-            $request->all(), 
-            [
-                'email'       => 'required|email|unique:users|max:255',
-                'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'oldPassword' => 'nullable',
-                'password'    => 
-                [
-                    'required',         
-                    'confirmed',        
-                    Password::min(8)    
-                        ->mixedCase()   
-                        ->letters()     
-                        ->numbers()     
-                        ->symbols()     
-                ],
-            ],
-        );
-
-        if ($validator->fails()) 
-        {
-            return response()->json($validator->error(), 400);
-        };
-
         $user->update(
             [
                 'email' => $request->mail,

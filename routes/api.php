@@ -21,10 +21,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Routes pour UserController
-Route::apiResource("users", App\Http\Controllers\UserController::class);
+Route::apiResource("users", App\Http\Controllers\API\UserController::class);
 
 // Routes pour PostController
-Route::apiResource("posts", App\Http\Controllers\PostController::class);
+Route::apiResource("posts", App\Http\Controllers\API\PostController::class);
 
 // Routes pour CommentController
-Route::apiResource("comments", App\Http\Controllers\CommentController::class);
+Route::apiResource("comments", App\Http\Controllers\API\CommentController::class);

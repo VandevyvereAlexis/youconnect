@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -28,18 +30,12 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $request->validate([                                                                    
-            'content' => 'required|min:25|max:1000',                                           
-            'tags'    => 'required|min:3|max:50',
-            'image'   => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]); 
-
         Post::create([                                                                          
             'content' => $request->content,                                                                                              
             'tags' => $request['tags'],                                                        
-            'image' => $request->input('image'),
+            'image' => isset($request['image']) ? uploadImage($request['image']) : 'user.png',
             'user_id' => Auth::user()->id,                                                 
         ]);
     }
